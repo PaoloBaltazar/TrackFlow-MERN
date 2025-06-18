@@ -35,9 +35,13 @@ export const register = async (req, res) => {
     });
     await user.save();
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: user._id, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -91,9 +95,13 @@ export const login = async (req, res) => {
       return res.json({ success: false, message: "Invalid password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { id: user._id, name: user.name },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -190,11 +198,34 @@ export const verifyEmail = async (req, res) => {
 };
 
 // Check if user is authenticated
+
 export const isAuthenticated = async (req, res) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.json({ success: false, message: "No token found." });
+  }
+
   try {
-    return res.json({ success: true });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await userModel
+      .findById(decoded.id)
+      .select("name email role isAccountVerified");
+
+    if (!user) return res.json({ success: false, message: "User not found" });
+
+    return res.json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isAccountVerified: user.isAccountVerified,
+      },
+    });
   } catch (error) {
-    return res.json({ success: false, message: error.message });
+    return res.json({ success: false, message: "Invalid token." });
   }
 };
 

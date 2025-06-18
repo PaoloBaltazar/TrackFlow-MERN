@@ -4,16 +4,23 @@ const userAuth = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    return res.json({ success: false, message: "Not Authorized. Login Again" });
+    return res
+      .status(401)
+      .json({ success: false, message: "Not Authorized. Login Again" });
   }
 
   try {
-    const tokenDecode = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (tokenDecode.id) {
-      req.userId = tokenDecode.id;
+    if (decoded.id && decoded.name) {
+      req.user = {
+        id: decoded.id,
+        name: decoded.name,
+        email: decoded.email,
+        role: decoded.role,
+      };
     } else {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Not Authorized. Login Again",
       });
@@ -21,7 +28,7 @@ const userAuth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    res.status(401).json({ success: false, message: error.message });
   }
 };
 
