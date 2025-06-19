@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,19 @@ interface TaskFormProps {
   onTaskCreate: (task: Task) => void;
 }
 
+interface Employee {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  department: string;
+}
+
 const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -34,7 +44,28 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
     priority: "Medium",
   });
 
-  const [loading, setLoading] = useState(false);
+  // Fetch employees when modal is opened
+  useEffect(() => {
+    if (open) {
+      const fetchEmployees = async () => {
+        try {
+          const res = await api.get("/api/user/employees");
+          if (res.data.success) {
+            setEmployees(res.data.users);
+          } else {
+            toast({ title: "Error", description: "Failed to fetch users" });
+          }
+        } catch (err: any) {
+          toast({
+            title: "Error",
+            description: err.response?.data?.message || "Could not load users",
+          });
+        }
+      };
+
+      fetchEmployees();
+    }
+  }, [open]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -106,12 +137,22 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
           </div>
           <div>
             <Label>Assignee</Label>
-            <Input
+            <select
               name="assignee"
               value={formData.assignee}
               onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
               required
-            />
+            >
+              <option value="" disabled>
+                Select employee
+              </option>
+              {employees.map((emp) => (
+                <option key={emp._id} value={emp.name}>
+                  {`${emp.name} (${emp.department} - ${emp.role})`}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <Label>Due Date</Label>

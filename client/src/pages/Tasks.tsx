@@ -138,7 +138,7 @@ const Tasks = () => {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
           {/* Header */}
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
+            <h1 className="text-3xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Task List
             </h1>
 
