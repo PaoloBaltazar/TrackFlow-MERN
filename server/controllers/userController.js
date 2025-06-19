@@ -2,12 +2,14 @@ import userModel from "../models/userModel.js";
 
 export const getUserData = async (req, res) => {
   try {
-    const { userId } = req;
+    const userId = req.user?.id; // ✅ correctly read from middleware
 
     const user = await userModel.findById(userId);
 
     if (!user) {
-      return res.json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     res.json({
@@ -22,7 +24,8 @@ export const getUserData = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.json({ success: false, message: error.message });
+    console.error("getUserData error:", error.message);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 

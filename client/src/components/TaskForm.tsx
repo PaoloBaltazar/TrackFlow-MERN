@@ -1,19 +1,20 @@
-
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import api from "@/services/api";
 
 interface Task {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   assignee: string;
   dueDate: string;
-  priority: 'Low' | 'Medium' | 'High';
-  status: 'Todo' | 'In Progress' | 'Completed';
+  priority: "Low" | "Medium" | "High";
+  status: "Todo" | "In Progress" | "Completed";
   createdAt: string;
 }
 
@@ -21,106 +22,126 @@ interface TaskFormProps {
   onTaskCreate: (task: Task) => void;
 }
 
-const TaskForm = ({ onTaskCreate }: TaskFormProps) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newTask, setNewTask] = useState({
-    title: '',
-    description: '',
-    assignee: '',
-    dueDate: '',
-    priority: 'Medium' as 'Low' | 'Medium' | 'High'
+const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    assignee: "",
+    dueDate: "",
+    priority: "Medium",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const task: Task = {
-      id: Date.now().toString(),
-      ...newTask,
-      status: 'Todo',
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    onTaskCreate(task);
-    setNewTask({
-      title: '',
-      description: '',
-      assignee: '',
-      dueDate: '',
-      priority: 'Medium'
-    });
-    setIsDialogOpen(false);
+    setLoading(true);
+
+    try {
+      const res = await api.post("/api/task", formData);
+      if (res.data.success) {
+        toast({
+          title: "Task Created",
+          description: "Task was successfully added!",
+        });
+        onTaskCreate(res.data.task);
+        setFormData({
+          title: "",
+          description: "",
+          assignee: "",
+          dueDate: "",
+          priority: "Medium",
+        });
+        setOpen(false);
+      } else {
+        toast({ title: "Failed", description: res.data.message });
+      }
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Something went wrong",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-          <Plus className="h-4 w-4" />
-          Add New Task
+        <Button size="sm" className="text-xs sm:text-sm">
+          + Add Task
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
-        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="title">Task Title</Label>
+            <Label>Title</Label>
             <Input
-              id="title"
-              value={newTask.title}
-              onChange={(e) => setNewTask({...newTask, title: e.target.value})}
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
               required
             />
           </div>
-          
           <div>
-            <Label htmlFor="description">Description</Label>
-            <Input
-              id="description"
-              value={newTask.description}
-              onChange={(e) => setNewTask({...newTask, description: e.target.value})}
+            <Label>Description</Label>
+            <Textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
               required
             />
           </div>
-          
           <div>
-            <Label htmlFor="assignee">Assignee</Label>
+            <Label>Assignee</Label>
             <Input
-              id="assignee"
-              value={newTask.assignee}
-              onChange={(e) => setNewTask({...newTask, assignee: e.target.value})}
+              name="assignee"
+              value={formData.assignee}
+              onChange={handleChange}
               required
             />
           </div>
-          
           <div>
-            <Label htmlFor="dueDate">Due Date</Label>
+            <Label>Due Date</Label>
             <Input
-              id="dueDate"
               type="date"
-              value={newTask.dueDate}
-              onChange={(e) => setNewTask({...newTask, dueDate: e.target.value})}
+              name="dueDate"
+              value={formData.dueDate}
+              onChange={handleChange}
               required
             />
           </div>
-          
           <div>
-            <Label htmlFor="priority">Priority</Label>
+            <Label>Priority</Label>
             <select
-              id="priority"
-              value={newTask.priority}
-              onChange={(e) => setNewTask({...newTask, priority: e.target.value as 'Low' | 'Medium' | 'High'})}
-              className="w-full p-2 border border-gray-200 rounded-md bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              name="priority"
+              value={formData.priority}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              required
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
           </div>
-          
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-            Create Task
-          </Button>
+          <div className="flex justify-end">
+            <Button type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create Task"}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

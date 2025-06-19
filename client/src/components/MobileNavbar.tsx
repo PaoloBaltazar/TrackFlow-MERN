@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { UserMenu } from '@/components/UserMenu';
-import { Menu } from 'lucide-react';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { UserMenu } from "@/components/UserMenu";
+import { Menu } from "lucide-react";
 
 interface MobileNavbarProps {
   onMenuClick: () => void;
@@ -20,7 +19,7 @@ export const MobileNavbar = ({ onMenuClick }: MobileNavbarProps) => {
         >
           <Menu className="h-5 w-5" />
         </Button>
-        <UserMenu profileOnly />
+        <UserMenu />
       </div>
     </div>
   );

@@ -5,6 +5,6 @@ import { getAllUsers, getUserData } from "../controllers/userController.js";
 const userRouter = express.Router();
 
 userRouter.get("/data", userAuth, getUserData);
-userRouter.get("/employees", getAllUsers);
+userRouter.get("/employees", userAuth, getAllUsers);
 
 export default userRouter;

@@ -26,6 +26,9 @@ const userAuth = async (req, res, next) => {
       });
     }
 
+    console.log("Token found:", token);
+    console.log("Decoded:", decoded);
+
     next();
   } catch (error) {
     res.status(401).json({ success: false, message: error.message });
