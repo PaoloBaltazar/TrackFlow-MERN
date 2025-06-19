@@ -148,7 +148,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
                 Select employee
               </option>
               {employees.map((emp) => (
-                <option key={emp._id} value={emp.name}>
+                <option key={emp._id} value={emp._id}>
                   {`${emp.name} (${emp.department} - ${emp.role})`}
                 </option>
               ))}

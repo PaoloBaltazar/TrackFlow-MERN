@@ -11,7 +11,8 @@ const taskSchema = new mongoose.Schema(
       required: [true, "Description is required"],
     },
     assignee: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: [true, "Assignee is required"],
     },
     dueDate: {

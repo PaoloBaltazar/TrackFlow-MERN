@@ -1,9 +1,14 @@
 import Task from "../models/taskModel.js";
+import Notification from "../models/notificationModel.js";
+import User from "../models/userModel.js";
 
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find().sort({ createdAt: -1 });
-    res.json({ success: true, tasks });
+    const tasks = await Task.find()
+      .populate("assignee", "name department role") // include only relevant fields
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, tasks });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -11,6 +16,13 @@ export const getTasks = async (req, res) => {
 
 export const createTask = async (req, res) => {
   const { title, description, assignee, dueDate, priority } = req.body;
+
+  if (!title || !description || !assignee || !dueDate || !priority) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields required" });
+  }
+
   try {
     const task = await Task.create({
       title,
@@ -18,10 +30,22 @@ export const createTask = async (req, res) => {
       assignee,
       dueDate,
       priority,
+      status: "Todo",
+      createdBy: req.user.id,
     });
+
+    // ✅ Create notification for assignee
+    await Notification.create({
+      user: assignee, // this should be a user ID
+      title: "Task Assigned",
+      message: `You have been assigned to "${title}"`,
+      type: "info",
+      icon: "document",
+    });
+
     res.status(201).json({ success: true, task });
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

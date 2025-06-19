@@ -20,13 +20,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import TaskForm from "@/components/TaskForm";
-import api from "@/services/api"; // ✅ Make sure this path is correct
+import api from "@/services/api";
 
 interface Task {
   _id: string;
   title: string;
   description: string;
-  assignee: string;
+  assignee: {
+    _id: string;
+    name: string;
+    department: string;
+    role: string;
+  };
   dueDate: string;
   priority: "Low" | "Medium" | "High";
   status: "Todo" | "In Progress" | "Completed";
@@ -41,36 +46,39 @@ const Tasks = () => {
     "incomplete" | "pending" | "complete"
   >("incomplete");
 
-  // ✅ Fetch tasks on mount
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const res = await api.get("/api/task");
-        if (res.data.success) {
-          setTasks(res.data.tasks);
-        } else {
-          toast({
-            title: "Error",
-            description: "Failed to fetch tasks.",
-          });
-        }
-      } catch (err: any) {
+  // ✅ Separated fetch logic so we can reuse it
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/api/task");
+      if (res.data.success) {
+        setTasks(res.data.tasks);
+      } else {
         toast({
           title: "Error",
-          description: err.response?.data?.message || err.message,
+          description: "Failed to fetch tasks.",
         });
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || err.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchTasks();
   }, []);
 
-  const handleTaskCreate = (task: Task) => {
-    setTasks([task, ...tasks]);
+  // ✅ Instead of pushing new task, refetch so we get populated assignee
+  const handleTaskCreate = () => {
+    fetchTasks();
+    toast({ title: "Task Created", description: "New task has been added." });
   };
 
-  // ✅ Update status using backend
   const handleStatusChange = async (
     taskId: string,
     newStatus: "Todo" | "In Progress" | "Completed"
@@ -136,13 +144,12 @@ const Tasks = () => {
     <Layout>
       <div className="min-h-screen bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8">
-          {/* Header */}
           <div className="mb-6 sm:mb-8">
             <h1 className="text-3xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6">
               Task List
             </h1>
 
-            {/* Tab Navigation */}
+            {/* Tabs */}
             <div className="flex items-center gap-3 sm:gap-6 mb-4 sm:mb-6 overflow-x-auto">
               {["incomplete", "pending", "complete"].map((tab) => (
                 <button
@@ -165,7 +172,7 @@ const Tasks = () => {
               ))}
             </div>
 
-            {/* Action Buttons */}
+            {/* Actions */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <Button variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
@@ -175,7 +182,7 @@ const Tasks = () => {
             </div>
           </div>
 
-          {/* Tasks Table */}
+          {/* Table */}
           <Card className="bg-white shadow-sm overflow-hidden">
             {loading ? (
               <div className="p-6 text-gray-600 text-center">
@@ -205,7 +212,9 @@ const Tasks = () => {
                             {task.description}
                           </div>
                         </TableCell>
-                        <TableCell>{task.assignee}</TableCell>
+                        <TableCell>
+                          {task.assignee?.name || "Unassigned"}
+                        </TableCell>
                         <TableCell className="hidden sm:table-cell">
                           {task.priority}
                         </TableCell>

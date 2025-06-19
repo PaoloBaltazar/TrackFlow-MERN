@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
       "Consultant",
     ],
   },
-
   verifyOtp: { type: String, default: "" },
   verifyOtpExpireAt: { type: Number, default: 0 },
   isAccountVerified: { type: Boolean, default: false },
@@ -33,6 +32,7 @@ const userSchema = new mongoose.Schema({
   resetOtpExpireAt: { type: Number, default: 0 },
 });
 
-const userModel = mongoose.models.user || mongoose.model("user", userSchema);
+// ✅ Use capitalized model name for correct Mongoose registration
+const userModel = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default userModel;
