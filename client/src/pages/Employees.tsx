@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Users, Mail, User } from "lucide-react";
 import api from "@/services/api";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 interface Employee {
   _id: string;
@@ -59,6 +60,9 @@ const Employees = () => {
     <Layout>
       <div className="min-h-screen bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+          {/* Dashboard Header */}
+          <DashboardHeader />
+
           {/* Header */}
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

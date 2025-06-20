@@ -46,7 +46,7 @@ export const RecentTasksList: React.FC<RecentTasksListProps> = ({
   loading,
 }) => {
   return (
-    <Card className="bg-white border border-gray-200 shadow-sm">
+    <Card className="bg-white border rounded-3xl border-gray-100 shadow-sm">
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div>
@@ -66,7 +66,7 @@ export const RecentTasksList: React.FC<RecentTasksListProps> = ({
           </Button>
         </div>
       </div>
-      <div className="p-6">
+      <div className="p-8">
         {loading ? (
           <p className="text-gray-500 text-sm">Loading recent tasks...</p>
         ) : (

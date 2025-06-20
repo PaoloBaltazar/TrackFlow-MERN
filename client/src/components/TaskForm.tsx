@@ -66,6 +66,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
 
       fetchEmployees();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleChange = (

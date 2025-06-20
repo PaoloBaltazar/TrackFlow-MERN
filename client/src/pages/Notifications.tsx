@@ -20,6 +20,7 @@ import {
 import { Link } from "react-router-dom";
 import api from "@/services/api";
 import { formatDistanceToNow } from "date-fns";
+import { DashboardHeader } from "@/components/DashboardHeader";
 
 interface Notification {
   _id: string;
@@ -151,15 +152,11 @@ const Notifications = () => {
     <Layout>
       <div className="min-h-screen bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+          {/* Dashboard Header */}
+          <DashboardHeader />
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center gap-4">
-                <Link to="/">
-                  <Button variant="ghost" size="sm">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back
-                  </Button>
-                </Link>
                 <div>
                   <h1 className="text-3xl font-bold">Notifications</h1>
                   <p className="text-gray-600 text-sm">
