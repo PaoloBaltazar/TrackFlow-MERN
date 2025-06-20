@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoutes.js";
 import taskRouter from "./routes/taskRoutes.js";
 import notificationRouter from "./routes/notificationRoutes.js";
 import documentRouter from "./routes/documentRoutes.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -32,5 +33,6 @@ app.use("/api/user", userRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/notification", notificationRouter);
 app.use("/api/documents", documentRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.listen(port, () => console.log(`Server started on PORT: ${port}`));

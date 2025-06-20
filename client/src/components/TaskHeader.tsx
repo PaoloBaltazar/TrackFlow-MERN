@@ -1,6 +1,5 @@
-
-import React from 'react';
-import TaskForm from './TaskForm';
+import React from "react";
+import TaskForm from "./TaskForm";
 
 interface Task {
   id: string;
@@ -8,8 +7,8 @@ interface Task {
   description: string;
   assignee: string;
   dueDate: string;
-  priority: 'Low' | 'Medium' | 'High';
-  status: 'Todo' | 'In Progress' | 'Completed';
+  priority: "Low" | "Medium" | "High";
+  status: "Todo" | "In Progress" | "Completed";
   createdAt: string;
 }
 
@@ -25,10 +24,10 @@ const TaskHeader = ({ onTaskCreate }: TaskHeaderProps) => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Tasks Management
           </h1>
-          <p className="text-gray-600">Organize and track your team's deliverables</p>
+          <p className="text-gray-600">
+            Organize and track your team's deliverables
+          </p>
         </div>
-        
-        <TaskForm onTaskCreate={onTaskCreate} />
       </div>
     </div>
   );
