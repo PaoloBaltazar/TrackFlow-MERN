@@ -46,7 +46,6 @@ const Tasks = () => {
     "incomplete" | "pending" | "complete"
   >("incomplete");
 
-  // ✅ Separated fetch logic so we can reuse it
   const fetchTasks = async () => {
     try {
       setLoading(true);
@@ -73,7 +72,6 @@ const Tasks = () => {
     fetchTasks();
   }, []);
 
-  // ✅ Instead of pushing new task, refetch so we get populated assignee
   const handleTaskCreate = () => {
     fetchTasks();
     toast({ title: "Task Created", description: "New task has been added." });
@@ -101,6 +99,29 @@ const Tasks = () => {
       toast({
         title: "Error",
         description: err.response?.data?.message || "Failed to update status",
+      });
+    }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const res = await api.delete(`/api/task/${taskId}`);
+      if (res.data.success) {
+        setTasks((prev) => prev.filter((task) => task._id !== taskId));
+        toast({
+          title: "🗑️ Task Deleted",
+          description: "The task was successfully deleted.",
+        });
+      }
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to delete task",
       });
     }
   };
@@ -245,6 +266,12 @@ const Tasks = () => {
                                   </DropdownMenuItem>
                                 )
                               )}
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteTask(task._id)}
+                                className="text-red-600 focus:text-red-700"
+                              >
+                                Delete Task
+                              </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>

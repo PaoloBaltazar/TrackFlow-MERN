@@ -49,19 +49,35 @@ export const createTask = async (req, res) => {
   }
 };
 
+export const deleteTask = async (req, res) => {
+  try {
+    const task = await Task.findByIdAndDelete(req.params.id);
+    if (!task) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Task not found" });
+    }
+
+    res.json({ success: true, message: "Task deleted" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 export const updateTaskStatus = async (req, res) => {
   const { id } = req.params;
   const { newStatus } = req.body;
-  const userName = req.user.name; // from auth middleware
+  const userId = req.user.id; // from userAuth middleware
 
   try {
-    const task = await Task.findById(id);
+    const task = await Task.findById(id).populate("assignee"); // Add populate to get full assignee info
     if (!task)
       return res
         .status(404)
         .json({ success: false, message: "Task not found" });
 
-    if (task.assignee !== userName) {
+    // 🔧 Compare user ID instead of name
+    if (task.assignee?._id.toString() !== userId) {
       return res.status(403).json({
         success: false,
         message: "Not authorized to change this task's status.",
