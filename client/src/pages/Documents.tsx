@@ -193,9 +193,8 @@ const Documents = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50/50">
+      <div className="min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-          <DashboardHeader />
           <div className="mb-6 sm:mb-10">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>

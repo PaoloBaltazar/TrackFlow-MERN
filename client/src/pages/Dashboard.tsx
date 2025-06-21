@@ -45,7 +45,6 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
-
   const fetchUser = async () => {
     try {
       const res = await api.get("/api/user/data");
@@ -97,38 +96,33 @@ const Dashboard = () => {
 
   return (
     <Layout>
-      <div className="bg-white">
-        <div className="min-h-screen bg-[#f6f8fc]">
-          <MobileNavbar onMenuClick={handleMobileMenuClick} />
+      <div className="min-h-screen">
+        <MobileNavbar onMenuClick={handleMobileMenuClick} />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Desktop Header */}
-            <DashboardHeader />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Desktop Header */}
+          <DashboardHeader
+            firstName={firstName}
+            greeting={greeting}
+            formattedDate={formattedDate}
+          />
 
-            <div className="mb-10 space-y-1">
-              <p className="text- 2xl text-gray-600">{formattedDate}</p>
-              <h1 className="text-4xl font-bold text-gray-900">
-                {greeting}, {firstName}
-              </h1>
-            </div>
+          {/* Stats Cards */}
+          <StatsGrid
+            totalTasks={stats?.totalTasks || 0}
+            completedTasks={stats?.completedTasks || 0}
+            pendingTasks={stats?.pendingTasks || 0}
+            users={stats?.users || 0}
+            documents={stats?.documents || 0}
+            loading={loading}
+          />
 
-            {/* Stats Cards */}
-            <StatsGrid
-              totalTasks={stats?.totalTasks || 0}
-              completedTasks={stats?.completedTasks || 0}
-              pendingTasks={stats?.pendingTasks || 0}
-              users={stats?.users || 0}
-              documents={stats?.documents || 0}
+          {/* Recent Tasks */}
+          <div className="w-full">
+            <RecentTasksList
+              tasks={stats?.recentTasks || []}
               loading={loading}
             />
-
-            {/* Recent Tasks */}
-            <div className="w-full">
-              <RecentTasksList
-                tasks={stats?.recentTasks || []}
-                loading={loading}
-              />
-            </div>
           </div>
         </div>
       </div>

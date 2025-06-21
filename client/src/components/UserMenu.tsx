@@ -113,14 +113,10 @@ export const UserMenu = ({ profileOnly = false }: UserMenuProps) => {
               {AvatarInitials}
             </AvatarFallback>
           </Avatar>
-          {!profileOnly && (
-            <div className="text-left">
-              <p className="font-medium text-gray-900">{user.name}</p>
-              <p className="text-sm text-gray-500">{user.role ?? "User"}</p>
-            </div>
-          )}
+          {/* ❌ Removed name and role display here */}
         </Button>
       </DialogTrigger>
+
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>User Profile</DialogTitle>
