@@ -23,6 +23,7 @@ const Documents = () => {
   const { toast } = useToast();
 
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [userDepartment, setUserDepartment] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -30,12 +31,20 @@ const Documents = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await api.get("/api/documents");
-        if (res.data.success) {
-          setDocuments(res.data.documents);
+        const [docRes, userRes] = await Promise.all([
+          api.get("/api/documents", { withCredentials: true }),
+          api.get("/api/user/data", { withCredentials: true }),
+        ]);
+
+        if (docRes.data.success) {
+          setDocuments(docRes.data.documents);
+        }
+
+        if (userRes.data.success) {
+          setUserDepartment(userRes.data.userData.department);
         }
       } catch (err) {
-        console.error("Error fetching documents:", err);
+        console.error("Error fetching documents or user:", err);
       }
     };
 
@@ -94,7 +103,7 @@ const Documents = () => {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("category", "General");
+      formData.append("category", userDepartment); // ✅ use department as category
 
       try {
         const res = await api.post("/api/documents/upload", formData, {
@@ -176,15 +185,15 @@ const Documents = () => {
     }
   };
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = (department: string) => {
     const colors: { [key: string]: string } = {
-      Financial: "bg-emerald-50 text-emerald-700 border-emerald-100",
-      Marketing: "bg-purple-50 text-purple-700 border-purple-100",
-      HR: "bg-blue-50 text-blue-700 border-blue-100",
-      Operations: "bg-orange-50 text-orange-700 border-orange-100",
-      Technical: "bg-gray-50 text-gray-700 border-gray-100",
+      Finance: "bg-emerald-100 text-emerald-800 hover:bg-emerald-200",
+      Marketing: "bg-purple-100 text-purple-800 hover:bg-purple-200",
+      "Human Resources": "bg-blue-100 text-blue-800 hover:bg-blue-200",
+      Operations: "bg-orange-100 text-orange-800 hover:bg-orange-200",
+      IT: "bg-gray-100 text-gray-800 hover:bg-gray-200",
     };
-    return colors[category] || "bg-gray-50 text-gray-700 border-gray-100";
+    return colors[department] || "bg-gray-100 text-gray-800 hover:bg-gray-200";
   };
 
   const getFileIcon = (type: string) => (

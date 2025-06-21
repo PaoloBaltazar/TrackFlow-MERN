@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import TaskForm from "@/components/TaskForm";
 import api from "@/services/api";
-import { DashboardHeader } from "@/components/DashboardHeader";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 
 interface Task {
   _id: string;
@@ -46,6 +47,8 @@ const Tasks = () => {
   const [selectedTab, setSelectedTab] = useState<
     "incomplete" | "pending" | "complete"
   >("incomplete");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
   const fetchTasks = async () => {
     try {
@@ -59,6 +62,7 @@ const Tasks = () => {
           description: "Failed to fetch tasks.",
         });
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast({
         title: "Error",
@@ -104,16 +108,18 @@ const Tasks = () => {
     }
   };
 
-  const handleDeleteTask = async (taskId: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this task?"
-    );
-    if (!confirmDelete) return;
+  const handleDeleteClick = (taskId: string) => {
+    setSelectedTaskId(taskId);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedTaskId) return;
 
     try {
-      const res = await api.delete(`/api/task/${taskId}`);
+      const res = await api.delete(`/api/task/${selectedTaskId}`);
       if (res.data.success) {
-        setTasks((prev) => prev.filter((task) => task._id !== taskId));
+        setTasks((prev) => prev.filter((task) => task._id !== selectedTaskId));
         toast({
           title: "🗑️ Task Deleted",
           description: "The task was successfully deleted.",
@@ -124,6 +130,9 @@ const Tasks = () => {
         title: "Error",
         description: err.response?.data?.message || "Failed to delete task",
       });
+    } finally {
+      setDeleteModalOpen(false);
+      setSelectedTaskId(null);
     }
   };
 
@@ -157,9 +166,9 @@ const Tasks = () => {
   };
 
   const filteredTasks = tasks.filter((task) => {
-    if (selectedTab === "incomplete") return task.status !== "Completed";
     if (selectedTab === "pending") return task.status === "In Progress";
-    return task.status === "Completed";
+    if (selectedTab === "complete") return task.status === "Completed";
+    return true; // Show all tasks for "All Task" tab
   });
 
   return (
@@ -186,7 +195,7 @@ const Tasks = () => {
                   }`}
                 >
                   {tab === "incomplete"
-                    ? "Incomplete Task"
+                    ? "All Task" // ← CHANGED THIS LINE
                     : tab === "pending"
                     ? "Pending Task"
                     : "Complete Task"}
@@ -268,7 +277,7 @@ const Tasks = () => {
                                 )
                               )}
                               <DropdownMenuItem
-                                onClick={() => handleDeleteTask(task._id)}
+                                onClick={() => handleDeleteClick(task._id)}
                                 className="text-red-600 focus:text-red-700"
                               >
                                 Delete Task
@@ -285,6 +294,11 @@ const Tasks = () => {
           </Card>
         </div>
       </div>
+      <ConfirmDeleteModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+      />
     </Layout>
   );
 };

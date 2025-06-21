@@ -113,7 +113,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreate }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="text-xs sm:text-sm">
+        <Button
+          size="sm"
+          className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto"
+        >
           + Add Task
         </Button>
       </DialogTrigger>

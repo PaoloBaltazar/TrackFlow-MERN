@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import TrackFlowLogo from "./TrackFlowLogo";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
@@ -47,11 +48,11 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
   return (
     <div className="w-64 h-screen bg-white shadow-sm flex flex-col">
       <div className="p-10 border-b border-gray-50">
-        <h1 className="text-2xl font-bold text-gray-900">DocTracker</h1>
+        <TrackFlowLogo />
       </div>
 
       <nav className="flex-1 p-6 overflow-y-auto">
-        <ul className="space-y-1">
+        <ul className="space-y-4">
           {navigation.map((item) => {
             const isActive = location.pathname === item.href;
             return (

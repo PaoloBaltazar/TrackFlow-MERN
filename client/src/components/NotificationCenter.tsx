@@ -1,9 +1,8 @@
-
-import React, { useState } from 'react';
-import { Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 export const NotificationCenter = () => {
   const [unreadCount] = useState(3); // This would come from a real notification state

@@ -189,7 +189,7 @@ const Notifications = () => {
                       <Card
                         key={notification._id}
                         className={`p-4 border ${
-                          !notification.isRead ? "ring-2 ring-blue-100" : ""
+                          !notification.isRead ? "" : ""
                         }`}
                       >
                         <div className="flex gap-4">

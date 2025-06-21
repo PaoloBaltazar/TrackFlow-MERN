@@ -7,6 +7,7 @@ import { StatsGrid } from "@/components/StatsGrid";
 import { RecentTasksList } from "@/components/RecentTasksList";
 import api from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
+import { RecentDocumentsList } from "@/components/RecentDocumentsList";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -118,11 +119,12 @@ const Dashboard = () => {
           />
 
           {/* Recent Tasks */}
-          <div className="w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <RecentTasksList
               tasks={stats?.recentTasks || []}
               loading={loading}
             />
+            <RecentDocumentsList />
           </div>
         </div>
       </div>

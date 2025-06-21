@@ -108,7 +108,7 @@ export const UserMenu = ({ profileOnly = false }: UserMenuProps) => {
             profileOnly ? "p-2 h-auto" : "flex items-center gap-3 p-3 h-auto"
           }
         >
-          <Avatar className={profileOnly ? "h-8 w-8" : "h-10 w-10"}>
+          <Avatar className={profileOnly ? "h-8 w-8" : "h-12 w-12"}>
             <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
               {AvatarInitials}
             </AvatarFallback>

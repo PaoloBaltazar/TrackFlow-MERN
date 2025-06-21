@@ -17,6 +17,7 @@ export const DashboardHeader = ({
   formattedDate: string;
 }) => {
   const [query, setQuery] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [results, setResults] = useState<any[]>([]);
   const [showResults, setShowResults] = useState(false);
   const navigate = useNavigate();
@@ -54,13 +55,13 @@ export const DashboardHeader = ({
   };
 
   return (
-    <div className="hidden md:block mb-8 relative border-b border-gray-50 pb-4">
+    <div className="hidden md:block mb-8 mt-4 relative border-b border-gray-50 pb-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="text-left hidden sm:block">
-          <h1 className="text-2xl font-semibold text-gray-800">
+          <h1 className="text-4xl font-semibold text-gray-800 mb-2 mt-2">
             {greeting}, {firstName}
           </h1>
-          <p className="text-sm text-gray-500">{formattedDate}</p>
+          <p className="text-md text-gray-500">{formattedDate}</p>
         </div>
 
         {/* Greeting & User Actions */}
@@ -71,10 +72,10 @@ export const DashboardHeader = ({
               <Search className="w-4 h-4 text-gray-400" />
             </div>
             <Input
-              placeholder="Search tasks or documents..."
+              placeholder="Search"
               value={query}
               onChange={handleSearch}
-              className="pl-10 pr-4 py-2 border rounded-md w-full"
+              className="pl-10 pr-10 py-2 border rounded-2xl w-full h-12"
             />
             {showResults && results.length > 0 && (
               <div className="absolute z-10 mt-1 w-full bg-white border rounded-md shadow-md max-h-60 overflow-y-auto">

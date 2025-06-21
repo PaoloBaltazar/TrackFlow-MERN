@@ -71,10 +71,6 @@ const Employees = () => {
                   Manage your team members and their information
                 </p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto">
-                <Users className="mr-2 h-4 w-4" />
-                Add Employee
-              </Button>
             </div>
           </div>
 

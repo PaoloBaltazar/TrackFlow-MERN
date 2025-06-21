@@ -1,5 +1,5 @@
-// components/RecentTasksList.tsx
 import React from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import navigate
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Clock, TrendingUp } from "lucide-react";
@@ -45,6 +45,12 @@ export const RecentTasksList: React.FC<RecentTasksListProps> = ({
   tasks,
   loading,
 }) => {
+  const navigate = useNavigate(); // ✅ Initialize navigate function
+
+  const handleViewAll = () => {
+    navigate("/tasks"); // ✅ Redirect to Task page
+  };
+
   return (
     <Card className="bg-white border rounded-3xl border-gray-100 shadow-sm">
       <div className="p-6 border-b border-gray-100">
@@ -58,9 +64,10 @@ export const RecentTasksList: React.FC<RecentTasksListProps> = ({
             </p>
           </div>
           <Button
+            onClick={handleViewAll} // ✅ Add onClick
             variant="ghost"
             size="sm"
-            className="text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
             View All
           </Button>
