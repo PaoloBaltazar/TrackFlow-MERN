@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   InputOTP,
   InputOTPGroup,
@@ -11,7 +11,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import api from "@/services/api"; // make sure this points to your configured Axios instance
+import api from "@/services/api";
+import TrackFlowLogo from "@/components/TrackFlowLogo";
 
 const ForgotPassword = () => {
   const [step, setStep] = useState<"email" | "otp" | "success">("email");
@@ -113,124 +114,136 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-8">
-        <CardHeader className="text-center pb-6">
-          <div className="flex items-center justify-center mb-4">
-            <Link to="/login" className="absolute left-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
+      <Card className="w-full max-w-md p-8 sm:p-10 rounded-2xl shadow-lg border border-gray-100">
+        <div className="flex flex-col items-center mb-6">
+          <div className="self-start -ml-2 mb-4">
+            <Link to="/login">
               <Button variant="ghost" size="icon">
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold text-gray-900">Reset Password</h1>
           </div>
-          <p className="text-gray-600">
+          <TrackFlowLogo />
+          <h1 className="text-2xl font-bold text-gray-800 mt-4">
+            Reset Your Password
+          </h1>
+          <p className="text-sm text-gray-500 mt-1 text-center">
             {step === "email" &&
               "Enter your email to receive a verification code"}
-            {step === "otp" && "Enter the verification code and new password"}
-            {step === "success" && "Password reset completed"}
+            {step === "otp" &&
+              "Enter the code sent to your email and your new password"}
+            {step === "success" && "Your password has been successfully reset"}
           </p>
-        </CardHeader>
+        </div>
 
-        <CardContent>
-          {step === "email" && (
-            <form onSubmit={handleSendOTP} className="space-y-6">
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full">
-                Send Verification Code
-              </Button>
-            </form>
-          )}
-
-          {step === "otp" && (
-            <form onSubmit={handleVerifyOTP} className="space-y-6">
-              <div>
-                <Label htmlFor="otp">Verification Code</Label>
-                <p className="text-sm text-gray-500 mb-4">Sent to {email}</p>
-                <div className="flex justify-center">
-                  <InputOTP
-                    maxLength={6}
-                    value={otp}
-                    onChange={(value) => setOtp(value)}
-                  >
-                    <InputOTPGroup>
-                      {[...Array(6)].map((_, i) => (
-                        <InputOTPSlot key={i} index={i} />
-                      ))}
-                    </InputOTPGroup>
-                  </InputOTP>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="password">New Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                  required
-                />
-              </div>
-
-              <Button type="submit" className="w-full">
-                Reset Password
-              </Button>
-
-              <div className="text-center">
-                <button
-                  type="button"
-                  onClick={handleResendOTP}
-                  className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
-                >
-                  Didn’t receive the code? Resend
-                </button>
-              </div>
-            </form>
-          )}
-
-          {step === "success" && (
-            <div className="text-center space-y-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-                <svg
-                  className="w-8 h-8 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Verification Successful
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Your password has been reset. You can now log in.
-                </p>
-              </div>
-              <Link to="/login" className="block">
-                <Button className="w-full">Back to Login</Button>
-              </Link>
+        {step === "email" && (
+          <form onSubmit={handleSendOTP} className="space-y-6">
+            <div>
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                className="h-11"
+              />
             </div>
-          )}
-        </CardContent>
+            <Button
+              type="submit"
+              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 transition"
+            >
+              Send Verification Code
+            </Button>
+          </form>
+        )}
+
+        {step === "otp" && (
+          <form onSubmit={handleVerifyOTP} className="space-y-6">
+            <div>
+              <Label>Verification Code</Label>
+              <p className="text-sm text-gray-500 mb-4">Sent to {email}</p>
+              <div className="flex justify-center">
+                <InputOTP
+                  maxLength={6}
+                  value={otp}
+                  onChange={(value) => setOtp(value)}
+                >
+                  <InputOTPGroup>
+                    {[...Array(6)].map((_, i) => (
+                      <InputOTPSlot key={i} index={i} />
+                    ))}
+                  </InputOTPGroup>
+                </InputOTP>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="password">New Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                required
+                className="h-11"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 transition"
+            >
+              Reset Password
+            </Button>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={handleResendOTP}
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Didn’t receive the code? Resend
+              </button>
+            </div>
+          </form>
+        )}
+
+        {step === "success" && (
+          <div className="text-center space-y-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Password Reset Successful
+              </h3>
+              <p className="text-gray-600 mb-6">
+                You can now log in using your new password.
+              </p>
+            </div>
+            <Link to="/login" className="block">
+              <Button className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 transition">
+                Back to Login
+              </Button>
+            </Link>
+          </div>
+        )}
       </Card>
     </div>
   );

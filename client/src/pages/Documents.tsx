@@ -207,7 +207,7 @@ const Documents = () => {
           <div className="mb-6 sm:mb-10">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-900">
                   Documents
                 </h1>
                 <p className="text-gray-600 mt-2 text-sm sm:text-base">

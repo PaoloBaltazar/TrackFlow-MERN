@@ -6,6 +6,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/services/api";
+import TrackFlowLogo from "@/components/TrackFlowLogo";
 
 const departments = [
   "Finance",
@@ -80,19 +81,24 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md p-8">
-        <CardHeader className="text-center pb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-gray-600 mt-2">
-            {step === 1 ? "Sign up to get started" : "Select your department"}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
+      <Card className="w-full max-w-md p-8 sm:p-10 rounded-2xl shadow-lg border border-gray-100">
+        <div className="flex flex-col items-center mb-6">
+          <TrackFlowLogo />
+          <h1 className="text-2xl font-bold text-gray-800 mt-4">
+            Create your TrackFlow account
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {step === 1
+              ? "Let’s get started"
+              : "Select your department and role"}
           </p>
-        </CardHeader>
+        </div>
 
-        <CardContent>
+        <CardContent className="pt-0">
           {step === 1 && (
             <form onSubmit={handleStepOneSubmit} className="space-y-6">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name</Label>
                 <Input
                   id="fullName"
@@ -102,11 +108,13 @@ const Signup = () => {
                     setSignupForm({ ...signupForm, fullName: e.target.value })
                   }
                   required
+                  placeholder="Your full name"
+                  className="h-11"
                 />
               </div>
 
-              <div>
-                <Label htmlFor="email">Email</Label>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
@@ -115,10 +123,12 @@ const Signup = () => {
                     setSignupForm({ ...signupForm, email: e.target.value })
                   }
                   required
+                  placeholder="you@example.com"
+                  className="h-11"
                 />
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -128,10 +138,15 @@ const Signup = () => {
                     setSignupForm({ ...signupForm, password: e.target.value })
                   }
                   required
+                  placeholder="••••••••"
+                  className="h-11"
                 />
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 transition"
+              >
                 Next
               </Button>
             </form>
@@ -158,7 +173,7 @@ const Signup = () => {
                   ))}
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 space-y-2">
                   <Label htmlFor="role">Role</Label>
                   <select
                     id="role"
@@ -166,7 +181,7 @@ const Signup = () => {
                     onChange={(e) =>
                       setSignupForm({ ...signupForm, role: e.target.value })
                     }
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-11 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   >
                     <option value="" disabled>
@@ -186,7 +201,10 @@ const Signup = () => {
                 </div>
               </div>
 
-              <Button className="w-full" onClick={handleFinalSubmit}>
+              <Button
+                className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 transition"
+                onClick={handleFinalSubmit}
+              >
                 Create Account
               </Button>
 
@@ -204,7 +222,7 @@ const Signup = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link to="/login" className="text-primary hover:underline">
+              <Link to="/login" className="text-blue-600 hover:underline">
                 Sign in
               </Link>
             </p>

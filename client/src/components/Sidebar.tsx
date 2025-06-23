@@ -48,7 +48,12 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
   return (
     <div className="w-64 h-screen bg-white shadow-sm flex flex-col">
       <div className="p-10 border-b border-gray-50">
-        <TrackFlowLogo />
+        <div className="flex items-center gap-3">
+          <TrackFlowLogo /> {/* Adjust size as needed */}
+          <h1 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent tracking-tight">
+            TrackFlow
+          </h1>
+        </div>
       </div>
 
       <nav className="flex-1 p-6 overflow-y-auto">

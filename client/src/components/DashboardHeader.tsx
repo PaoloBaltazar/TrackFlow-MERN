@@ -58,8 +58,8 @@ export const DashboardHeader = ({
     <div className="hidden md:block mb-8 mt-4 relative border-b border-gray-50 pb-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="text-left hidden sm:block">
-          <h1 className="text-4xl font-semibold text-gray-800 mb-2 mt-2">
-            {greeting}, {firstName}
+          <h1 className="text-4xl text-gray-800 mb-2 mt-2">
+            {greeting}, <span className="font-semibold">{firstName}</span>
           </h1>
           <p className="text-md text-gray-500">{formattedDate}</p>
         </div>
