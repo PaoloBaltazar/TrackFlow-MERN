@@ -16,9 +16,21 @@ const app = express();
 const port = process.env.PORT || 4000;
 connectDB();
 
+const allowedOrigins = [
+  "http://localhost:5173", // local dev (Vite)
+  "http://localhost:3000", // local dev (CRA)
+  "https://trackflow-mern-1.onrender.com", // your actual frontend
+];
+
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
