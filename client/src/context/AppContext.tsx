@@ -7,7 +7,10 @@ interface AppContextType {
   loading: boolean;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; message?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -43,7 +46,7 @@ export const AppContextProvider = ({
       if (res.data.success) {
         // Store token in localStorage if provided
         if (res.data.token) {
-          localStorage.setItem('token', res.data.token);
+          localStorage.setItem("token", res.data.token);
         }
         // Check authentication status
         await checkAuth();
@@ -52,7 +55,7 @@ export const AppContextProvider = ({
         return { success: false, message: res.data.message };
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       return { success: false, message: "Login failed" };
     }
   };
@@ -61,10 +64,10 @@ export const AppContextProvider = ({
     try {
       await api.post("/api/auth/logout");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       // Always clear local state and localStorage
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       setIsLogin(false);
       setUser(null);
     }
@@ -79,13 +82,13 @@ export const AppContextProvider = ({
       } else {
         setIsLogin(false);
         setUser(null);
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
       }
     } catch (error) {
-      console.error('Auth check error:', error);
+      console.error("Auth check error:", error);
       setIsLogin(false);
       setUser(null);
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }

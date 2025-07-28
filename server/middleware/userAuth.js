@@ -3,16 +3,19 @@ import jwt from "jsonwebtoken";
 const userAuth = async (req, res, next) => {
   // Check for token in cookies first, then in Authorization header
   let token = req.cookies.token;
-  
+
   if (!token) {
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.substring(7);
     }
   }
 
   console.log("Auth middleware - Cookies received:", req.cookies);
-  console.log("Auth middleware - Authorization header:", req.headers.authorization);
+  console.log(
+    "Auth middleware - Authorization header:",
+    req.headers.authorization
+  );
   console.log("Auth middleware - Token found:", token ? "YES" : "NO");
 
   if (!token) {
@@ -40,7 +43,10 @@ const userAuth = async (req, res, next) => {
       });
     }
 
-    console.log("Auth middleware - Authentication successful for user:", decoded.name);
+    console.log(
+      "Auth middleware - Authentication successful for user:",
+      decoded.name
+    );
     next();
   } catch (error) {
     console.log("Auth middleware - Token verification error:", error.message);

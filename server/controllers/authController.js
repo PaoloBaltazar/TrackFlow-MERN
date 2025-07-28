@@ -36,11 +36,11 @@ export const register = async (req, res) => {
     await user.save();
 
     const token = jwt.sign(
-      { 
-        id: user._id, 
+      {
+        id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role 
+        role: user.role,
       },
       process.env.JWT_SECRET,
       {
@@ -65,13 +65,11 @@ export const register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    return res
-      .status(201)
-      .json({ 
-        success: true, 
-        message: "Signup successful",
-        token: token // Return token in response for localStorage storage if needed
-      });
+    return res.status(201).json({
+      success: true,
+      message: "Signup successful",
+      token: token, // Return token in response for localStorage storage if needed
+    });
   } catch (error) {
     console.error("Signup Error:", error.message);
     return res.status(500).json({
@@ -108,11 +106,11 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { 
-        id: user._id, 
+      {
+        id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role 
+        role: user.role,
       },
       process.env.JWT_SECRET,
       {
@@ -127,11 +125,16 @@ export const login = async (req, res) => {
     });
 
     console.log("Login successful - Cookie set for user:", user.name);
-    console.log("Cookie settings - secure:", process.env.NODE_ENV === "production", "sameSite:", process.env.NODE_ENV === "production" ? "none" : "lax");
+    console.log(
+      "Cookie settings - secure:",
+      process.env.NODE_ENV === "production",
+      "sameSite:",
+      process.env.NODE_ENV === "production" ? "none" : "lax"
+    );
 
-    return res.json({ 
+    return res.json({
       success: true,
-      token: token // Return token in response for localStorage storage if needed
+      token: token, // Return token in response for localStorage storage if needed
     });
   } catch (error) {
     return res.json({ success: false, message: error.message });
@@ -225,10 +228,10 @@ export const verifyEmail = async (req, res) => {
 export const isAuthenticated = async (req, res) => {
   // Check for token in cookies first, then in Authorization header
   let token = req.cookies.token;
-  
+
   if (!token) {
     const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
+    if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.substring(7);
     }
   }
