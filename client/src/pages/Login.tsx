@@ -5,13 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import api from "@/services/api";
 import { AppContext } from "@/context/AppContext";
 import TrackFlowLogo from "@/components/TrackFlowLogo";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setIsLogin } = useContext(AppContext);
+  const { login } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,13 +19,12 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await api.post("/api/auth/login", { email, password });
-
-      if (res.data.success) {
-        setIsLogin(true);
+      const result = await login(email, password);
+      
+      if (result.success) {
         navigate("/");
       } else {
-        alert(res.data.message || "Login failed");
+        alert(result.message || "Login failed");
       }
     } catch (err) {
       console.error("Login error", err);

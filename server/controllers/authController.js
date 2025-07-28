@@ -67,7 +67,11 @@ export const register = async (req, res) => {
 
     return res
       .status(201)
-      .json({ success: true, message: "Signup successful" });
+      .json({ 
+        success: true, 
+        message: "Signup successful",
+        token: token // Return token in response for localStorage storage if needed
+      });
   } catch (error) {
     console.error("Signup Error:", error.message);
     return res.status(500).json({
@@ -125,7 +129,10 @@ export const login = async (req, res) => {
     console.log("Login successful - Cookie set for user:", user.name);
     console.log("Cookie settings - secure:", process.env.NODE_ENV === "production", "sameSite:", process.env.NODE_ENV === "production" ? "none" : "lax");
 
-    return res.json({ success: true });
+    return res.json({ 
+      success: true,
+      token: token // Return token in response for localStorage storage if needed
+    });
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }
@@ -216,7 +223,17 @@ export const verifyEmail = async (req, res) => {
 // Check if user is authenticated
 
 export const isAuthenticated = async (req, res) => {
-  const { token } = req.cookies;
+  // Check for token in cookies first, then in Authorization header
+  let token = req.cookies.token;
+  
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+    }
+  }
+
+  console.log("isAuthenticated - Token found:", token ? "YES" : "NO");
 
   if (!token) {
     return res.json({ success: false, message: "No token found." });

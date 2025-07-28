@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AppContext } from "@/context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import TrackFlowLogo from "./TrackFlowLogo";
 
@@ -28,11 +29,11 @@ interface SidebarProps {
 export const Sidebar = ({ onClose }: SidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useContext(AppContext);
   const { toast } = useToast();
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("isLoggedIn");
+  const handleLogout = async () => {
+    await logout();
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",

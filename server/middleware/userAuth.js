@@ -1,13 +1,22 @@
 import jwt from "jsonwebtoken";
 
 const userAuth = async (req, res, next) => {
-  const { token } = req.cookies;
+  // Check for token in cookies first, then in Authorization header
+  let token = req.cookies.token;
+  
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7);
+    }
+  }
 
   console.log("Auth middleware - Cookies received:", req.cookies);
+  console.log("Auth middleware - Authorization header:", req.headers.authorization);
   console.log("Auth middleware - Token found:", token ? "YES" : "NO");
 
   if (!token) {
-    console.log("Auth middleware - No token found in cookies");
+    console.log("Auth middleware - No token found in cookies or headers");
     return res
       .status(401)
       .json({ success: false, message: "Not Authorized. Login Again" });

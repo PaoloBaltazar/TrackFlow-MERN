@@ -27,7 +27,7 @@ interface UserMenuProps {
 }
 
 export const UserMenu = ({ profileOnly = false }: UserMenuProps) => {
-  const { isLogin, setIsLogin } = useContext(AppContext);
+  const { isLogin, logout } = useContext(AppContext);
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -55,13 +55,7 @@ export const UserMenu = ({ profileOnly = false }: UserMenuProps) => {
   }, [isLogin]);
 
   const handleLogout = async () => {
-    try {
-      await api.post("/api/auth/logout");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-    setIsLogin(false);
-    setUser(null);
+    await logout();
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",

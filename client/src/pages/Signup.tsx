@@ -59,6 +59,11 @@ const Signup = () => {
       const res = await api.post("/api/auth/signup", signupForm);
 
       if (res.data.success) {
+        // Store token in localStorage if provided
+        if (res.data.token) {
+          localStorage.setItem('token', res.data.token);
+        }
+        
         toast({
           title: "Account Created!",
           description: "You have successfully signed up. Redirecting...",
