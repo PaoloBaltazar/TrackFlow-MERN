@@ -7,7 +7,6 @@ A full-stack task management application built with the MERN stack (MongoDB, Exp
 - **Frontend**: [https://trackflow-mern-1.onrender.com](https://trackflow-mern-1.onrender.com)
 - **Backend API**: [https://trackflow-mern.onrender.com](https://trackflow-mern.onrender.com)
 - <img width="1920" height="1080" alt="Screenshot 2025-07-29 at 10 36 23 PM" src="https://github.com/user-attachments/assets/df425ae2-aaf2-4c3d-8060-ddc590df87aa" />
-
 ## ✨ Features
 
 ### 🔐 Authentication & User Management
